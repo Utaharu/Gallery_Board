@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="$rw_c"?>
+<!DOCTYPE html PUBLIC "-//WAPFORUM//DTD XHTML Mobile 1.0//EN" "http://www.wapforum.org/DTD/xhtml-mobile10.dtd" >
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=$rw_c"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0" />
+<title>$hdtitle - mobile</title>
+<style type="text/css">
+<!--
+#body {margin:auto; width:90%; max-width:90%;}
+.Box {
+	margin:5px 0;
+	border:1px dotted black;
+}
+A:active{color:black;}
+A:hover { color:red;}
+A:visited {color:black;}
+form {margin:0px;}
+.title {
+	border:3px solid black;
+	margin:5px 0;
+	text-align:center;
+	background:#462100;
+	letter-spacing:2px;
+	font-weight:bold;
+	font-size:15px;
+	padding-top:5px;
+	color:white;
+}
+#topnavi {
+	font-weight:bold;
+	text-align:center;
+	padding:0 10%;
+}
+.cross {
+	background:#462100;
+	color:white;
+	font-weight:bold;
+	padding:5px 10px;
+	max-width:100%;
+	font-size:10px;
+}
+.cont {
+	background:#FFFFCC;
+	padding:5px 5px;
+}
+.picf {
+	border:3px solid black;
+	height:210px;
+	background:#ffffcc;
+	text-align:center;
+	text-decoration:none;
+	padding:5px;
+}
+img {
+	border:none;
+	max-height:100%;
+	max-width:100%;
+}
+.linef {
+	background:#462100;
+	padding:0 5px;
+	overflow:hidden;
+}
+.cont {
+	background:#ffffcc;
+	padding:5px;
+	font-size:12px;
+}
+input,textarea,select {margin:0 10px;}
+#btmnavi {
+	text-align:center;
+	margin:5px;
+	font-weight:bold;
+}
+.item_name{
+	display:inline-block;
+	width:35px;
+	text-align:right;
+	
+}
+-->
+-->
+</style>
+</head>
+<body>
+<script type="text/javascript" src="$javascript"></script>
+<script language="JavaScript" type="text/javascript">
+//<![CDATA[
+<!--
+var encoding = "$rw_c";
+var php = "$php";
+-->
+//]]>
+</script>
+
+
+</head>
+<body onpageshow="auth_ref();" onload="auth_ref();get_filesize();">
+	<div id="body">
+		<div class="title">$title</div>
+		<p id="topnavi">[<a href="$mhome">Home</a>] [<a href="?">閲覧</a>] [<a href="?mode=new">貼り付け</a>] [<a href="?mode=op">編集</a>]</p>
+		<!-- ImageList -->
+		<p>
+			<!-- ListBox -->
+				<div class="linef">
+					<!-- ItemBox -->
+					<div class="picf">
+						<!-- Item --><div>$img_no $log_flag</div><a href="$img_url"><img src="$img_file" style="$img_center $img_size" /></a><div>$log_user[$res_num]<!-- SiteURL:[<a href="$hp_url">URL</a>]--></div><!-- Item -->
+					</div>
+					<!-- ItemBox -->
+				</div>
+			<!-- ListBox -->
+		
+		<div id="btmnavi"><a href="$back">Back</a> < $p_navi > <a href="$next">Next</a></div>
+	</p>
+	<!-- ImageList -->
+
+<!-- ImagePreview -->
+	<p>
+		<!-- Item -->
+			<div class="cross">[ $log_no ] $log_entry</div>
+			<div class="linef">
+				<div class="cont">
+					<div  style="padding:5px 10px; color:$log_color;">$log_msg</div>
+					<!-- Tag -->
+						<p class="Tag">キーワード : $tag</p>
+					<!-- Tag -->
+				</div>
+			</div>
+			
+			<div class="cross">
+				<span class="item_name">投稿日:</span>$log_day<br/>
+				<span class="item_name">投稿者:</span>$log_user $user_trip <!-- SiteUrl:[<a href="$hp_url">URL</a>]--> <br/>
+				<!-- PV_Counter:<span class="item_name">PV:</span>$pv_cnt -->
+			</div>
+			<div class="linef">
+				<div class="cont">
+					<a href="$img_url" target="_blank"><img src="$img_file" style="$img_center $img_size $img_ max-width:100%;" title="$log_entry" alt="$log_entry" /></a>
+				</div>
+			</div>
+
+			<div class="cross"><br /></div>
+		<!-- Item -->
+	</p>
+
+	<p>
+		<div class="cross">レス</div>
+		<div class="linef">
+			<div class="cont">
+				<!-- ResItem -->
+					<a name="Res$res_no"></a>
+
+						<div><a href="$img_url" target="_blank"><img src="$img_file" /></a></div>
+						<div style="padding:5px 0; color:$res_color;">$res_msg</div>
+						<!-- Tag -->
+							<p class="Tag">キーワード : $tag</p>
+						<!-- Tag -->
+						<div style=" padding:0px 5px;">No.$res_no $res_day@$res_user $user_trip <!-- SiteUrl:[<a href="$hp_url">URL</a>]--></div>
+						<hr style="color:black;" />
+				<!-- ResItem -->
+			</div>
+		</div>
+		<div class="cross"><br /></div>
+				<div id="btmnavi"><a href="$back">Back</a> < $p_navi > <a href="$next">Next</a></div>
+	</p>
+<!-- ImagePreview -->
+
+<!-- OpForm -->
+	<p>
+		<div class="cross"><br /></div>
+		<div class="linef">
+			<div class="cont">
+				<form method="post" action="$php">
+					<div>
+						操作モード[<span title="親記事は編集と削除が行えますが、レスは削除しか行えません" style="color:blue;">?</span>]:
+						<label><input type="radio" name="mode" value="edit" />編集</label> 
+						<label><input type="radio" name="mode" value="remove" />削除</label>
+					</div>
+					<div style="margin:2px 0;">掲示番号[<span title="$op_help" style="color:blue;">?</span>]:<input type="text" name="prevno" value="$prev_no" style="width:15%;" /> パスワード:<input type="password" name="pass" style="width:20%" /> <input type="submit" value="実行" /> <input type="reset" value="取消" /></div>
+				</form>
+			</div>
+		</div>
+		<div class="cross"><br /></div>
+	</p>
+<!-- OpForm -->
+
+<!-- EditForm -->
+	<p>
+		<div class="cross"><br /></div>
+		<div class="linef">
+			<div class="cont">
+				<form enctype="multipart/form-data" method="post" action="$php" style="line-height:20px;">
+					<div style="text-align:center;">$form_entry</div>
+					<div style="padding:5px;">$rule</div>
+					<div>名前</div>
+					<div><input type="text" name="name" style="width:80%;" value="$name" /></div>
+					<!-- SiteUrlArea --> 
+						<div>サイトURL</div>
+						<div><input type="text" name="hp_url" style="width:80%;" value="$hp_url" /></div>
+					<!-- SiteUrlArea -->
+					
+					<!-- MailArea --> 
+						<div>メールアドレス $h_mark[mail]</div>
+						<div><input type="text" name="mail" style="width:80%;" value="$mail" /></div>
+						<!-- NewsArea -->
+						<div>レス通知</div>
+						<div><input type="radio" name="news" value="0" />不要 <input type="radio" name="news" value="1" />必要</div>
+						<!-- NewsArea -->
+					<!-- MailArea -->
+												
+					<!-- TitleArea -->
+						<div>題名</div>
+						<div><input type="text" name="entry" style="width:80%;" value="$entry" /></div>
+					<!-- TitleArea -->
+					
+					<div>コメント</div>
+					<div><textarea style="width:90%; height:100px;" name="msg">$msg</textarea></div>
+					
+					<!-- TagArea -->
+						<div>Tagキーワード</div>
+						<div><input type="text" name="tag" style="width:80%;" value="$tag" /></div>
+					<!-- TagArea -->
+						
+					<!-- FileUpArea -->
+						<input type="hidden" name="MAX_FILE_SIZE" value="$max_file_size" />
+						<div>ファイル($up_size まで) $ftyu </div>
+						<div>
+							<input type="radio" name="utp" id="file" value="file" />
+							<input type="file" name="up_file" id="up_file" style="width:60%;" onchange="valchange('file');get_filesize();" title="jpg、jpeg、gif、pngのファイルが対象" accept=".jpg,.jpeg,.png,.gif" />
+							<span id="UpFile_Size"></span>
+						</div>
+					<!-- FileUpArea -->
+					
+					<!-- MovieUpArea -->
+						<div>動画のURL [<span title="$movie_help" style="color:blue;">?</span>]</div>
+						<div>
+							<input type="radio" name="utp" id="movie" value="movie" />
+							<input type="text" name="up_movie" style="width:80%;" value="$file_url" onchange="valchange('movie');" />
+						</div>
+					<!-- MovieUpArea -->
+				
+					<div>パスワード</div>
+					<div><input type="password" name="pass" style="width:80%;" value="$pass" /></div>
+					
+					<!-- AuthArea -->
+						<div>画像認証</div>
+						<div><input type="text" name="auth" style="width:100px; height:25px; float:left;" /> <img src="./img/image_auth.png" id="auth" /></div>
+						$ia_tyu
+					<!-- AuthArea -->
+					
+					<div>文字色</div>
+					<select name="color" style="width:80%;">
+						<!-- ColorList:<option style="background:$color;" value="$color">$color</option> -->
+					</select>
+					<div style="text-align:center;"><input type="submit" value="掲載" />　/　<input type="reset" value="取消" /></div>
+					
+					<input type="hidden" name="mode" value="$type" />
+					<input type="hidden" name="prevno" value="$prevno" />
+					
+				</form>
+
+			</div>
+		</div>
+		<div class="cross"><br /></div>
+	</p>
+<!-- EditForm -->
+
+</div>
+</html>
+
+</html>

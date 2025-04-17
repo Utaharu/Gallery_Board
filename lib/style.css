@@ -1,0 +1,144 @@
+.img {border:none; max-width:100%; max-height:100%;}
+.Case_Box
+{
+	background:#462100;
+	padding:5px;
+	margin-top:20px;
+	display:flex;
+	flex-direction:column;
+	justify-content:space-around;
+	align-content:space-around;
+	align-items:stretch;	
+	max-width:100%;
+	width:100%;
+	border-spacing:10px;
+
+}
+
+.Case
+{
+	background:#462100;
+	display:flex;
+	flex-direction:row;
+	justify-content:space-around;
+	align-content:space-around;
+	align-items:stretch;
+}
+input,textarea,select {margin:0 10px;}
+#Bottom_Navi
+{
+	text-align:center;
+	margin:5px;
+	font-weight:bold;
+}
+
+A:active{color:black;} A:hover { color:red;} A:visited {color:black;}
+		form {margin:0px;}
+		#Title
+		{
+			color:black;
+			text-shadow:3px 3px 3px white;
+		}
+	
+		body
+		{
+			margin:0 auto;
+			width:800px;
+		}
+		header
+		{
+			margin:0 auto;
+			box-sizing:content-box;
+			display:flex;
+			flex-direction:column;
+			padding:0 10px;
+			min-height:100px;
+			background-color:silver;
+			position:relative;
+			border-radius:10px;
+			box-shadow:5px 5px 3px 0 gray;
+		
+		}
+		nav #Top_Menu
+		{
+			margin:0;
+			margin-bottom:5px;
+			padding:0;
+			display:flex;
+			justify-content:flex-end;
+			align-items:flex-end;
+			list-style-type:none;
+			text-align:center;
+		}
+		nav #Top_Menu li
+		{
+			flex-basis:100px;
+			min-width:100px;
+			background-color:white;
+			border: 1px dashed black;
+			margin-right:5px;
+			border-radius:5px 5px 5px 5px;
+			box-shadow:3px 3px 2px 0px black;
+			font-weight:bold;
+		}
+		nav #Top_Menu a
+		{
+			padding:2px 0;
+			text-decoration:none;
+			width:100%;
+			display:inline-block;
+		}
+		.Image_Box
+		{
+			padding:10px;
+			display:flex;
+			flex-direction:column;
+			background-color:black;
+		}
+		.Image_List
+		{
+			display:flex;
+			flex-wrap:nowrap;
+			justify-content:center;
+		}
+		.Item_Box
+		{
+			display:flex;
+			flex-direction:column;
+			position:relative;
+			border:1px dashed black;
+			background:#ffffcc;
+			text-align:center;
+			text-decoration:none;
+			padding:5px;
+			text-align:left;
+			vertical-align:top;
+		}
+		
+		#List_Page .Item_Box
+		{
+			max-width:var(--image_width);
+			width:var(--image_width);
+			flex-basis:var(--image_width);
+			text-align:center;
+		}
+		
+		#List_Page .Thumbnail
+		{
+			height:var(--image_height);
+			max-width:var(--image_width);
+			vertical-align:middle;
+			text-align:center;
+			padding:0 2px;
+			display:flex;
+			flex-direction:column;
+			justify-content:center;
+			align-content:center;
+		}
+		
+		.Good form
+		{
+			margin:0;
+			padding:0;
+			display:inline-block;
+		}

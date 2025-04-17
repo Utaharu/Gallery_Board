@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="$rw_c" />
+<meta http-equiv="Content-type" content="text/html; charset=$rw_c" />
+<meta http-equiv="Content-Style-Type" content="text/css" />
+<meta http-equiv="Content-Script-Type" content="text/javascript" />
+<title>$hdtitle</title>
+<script type="text/javascript" src="$javascript"></script>
+<link rel="stylesheet" href="$css" media="all" />
+<script language="JavaScript" type="text/javascript">
+//<![CDATA[
+<!--
+var encoding = "$rw_c";
+var php = "$php";
+-->
+//]]>
+</script>
+<style>
+	<!--
+		:root
+		{
+			--image_width:$imgwpx;
+			--image_height:$imghpx;
+		}
+	-->
+</style>
+</head>
+<body onpageshow="auth_ref();" onload="auth_ref();get_filesize();">
+
+	<header>
+		<h1 id="Title">$title</h1>
+		<nav>
+			<ul id="Top_Menu">
+				<li><a href="$home">Home</a></li>
+				<li><a href="?">閲覧</a></li>
+				<li><a href="?mode=new">貼り付け</a></li>
+				<li><a href="?mode=op">編集</a></li>
+			</ul>
+		</nav>		
+	</header>
+	
+	<div id="body">
+		
+<!-- ImageList -->
+		<div id="List_Page">
+			<form method="post" style="position:relative; right:0px; width:200px; margin:10px 0; padding:0 5px; background-color:gray;">
+				<input type="text" name="search" style="width:120px; margin:0;" value="$search" />
+				<input type="submit" value="検索"  style="margin:0; letter-spacing:3px;"/>
+			</form>
+			<div class="Image_Box">
+				<!-- ListBox -->
+				<div class="Image_List">
+					<!-- ItemBox -->
+					<div class="Item_Box">
+						<!-- Item -->
+							<div style="font-size:13px;">- No.$img_no - $log_flag</div>
+							<div class="Thumbnail"><a href="$img_url"><img src="$img_file"  style="$img_size;" /></a></div>
+							<div>$log_user[$res_num]<!-- SiteURL:[<a href="$hp_url">URL</a>]--></div>
+						<!-- Item -->
+					</div>
+					<!-- ItemBox -->
+				</div>
+				<!-- ListBox -->
+			</div>
+			
+			<div id="Bottom_Navi"><a href="$back">Back</a> < $p_navi > <a href="$next">Next</a></div>
+		</div>
+<!-- ImageList -->
+
+<!-- ImagePreview -->
+		<div id="Preview_Page">
+			<div class="Case_Box">
+				<div class="Item_Box">
+					<!-- Item -->
+						<div style="font-weight:bold;">[ $log_no ] $log_entry</div>
+						<div style="padding:5px 10px; color:$log_color;">$log_msg</div>
+						<!-- Tag -->
+							<p class="Tag">キーワード : $tag</p>
+						<!-- Tag -->
+						<div style="background:#462100;  padding:5px 10px; font-weight:bold; text-align:right; color:white;">$log_user $user_trip <!-- SiteUrl:[<a href="$hp_url">URL</a>]--> @ $log_day <!-- PV_Counter:PV:$pv_cnt --></div>
+					
+						<div style="border-top:2px solid black; padding:5px;">
+							<!-- Good_Counter -->
+								<div class="Good">Good:$good_cnt
+									<form action="" method="post" style="margin:0;padding:0; display:inline-block;">
+										<button type="submit" name="good" value="$log_no-0">Good</button>
+									</form>
+								</div>
+							<!-- Good_Counter -->
+							<a href="$img_url" target="_blank"><img src="$img_file" style="$img_size max-width:100%;" title="$log_entry" alt="$log_entry" /></a>
+						</div>
+					<!-- Item -->
+				</div>
+			</div>
+		
+			<div class="Case_Box">
+				<div style="font-weight:bold; color:white;">レス</div>
+				<!-- ResItem -->
+					<div class="Item_Box" name="Res$res_no" id="Res$res_no" style="border-collapse:collapse; text-align:left; border-bottom:2px solid black;">
+						<div style="border-left:20px solid black; border-bottom:1px dashed black; padding: 5px 0 5px 10px;"><a href="?mode=op&prevno=$log_no-$res_no" title="削除" style="text-decoration:none;">No.$log_no-$res_no</a> @ $res_user $user_trip <!-- SiteUrl:[<a href="$hp_url">URL</a>]--></div>
+						<div style="padding:5px;">
+							<!-- Good_Counter -->
+								<div class="Good">Good:$good_cnt
+									<form action="" method="post">
+										<button type="submit" name="good" value="$log_no-$res_no">Good</button>
+									</form>
+								</div>
+							<!-- Good_Counter -->
+							<a href="$img_url" target="_blank"><img src="$img_file" style="$img_size max-width:100%;" /></a>
+							<div style="padding:10px 0; color:$res_color;">$res_msg</div>
+							<!-- Tag -->
+								<p class="Tag">キーワード : $tag</p>
+							<!-- Tag -->
+							<div style="padding-top:5px; text-align:right; border-top:1px dotted black; font-size:14px;">$res_day</div>
+						</div>
+					</div>
+				<!-- ResItem -->
+			</div>
+			
+			<div id="Bottom_Navi">
+				<a href="$back">Back</a> < $p_navi > <a href="$next">Next</a>
+				<span style="float:right;">Page:
+					<form method="post" action="?mode=view&prevno=$prev_no" style="margin:0; display:inline-block;"><input type="text" name="page" value="$page" style="width:20px; border:1px solid blak; margin:0;" /><input type="submit" value="●" style="margin:0; padding:0; width:20px; text-align:center;" /></form>
+					 / $pnum
+				</span>
+			</div>
+		</div>
+<!-- ImagePreview -->
+
+<!-- OpForm -->
+		<div id="Operation_Page">
+			<div class="Case_Box">
+				<div class="Item_Box">
+					<form method="post" action="$php">
+						<div>
+							操作モード[<span title="親記事は編集と削除が行えますが、レスは削除しか行えません" style="color:blue;">?</span>]:
+							<label><input type="radio" name="mode" value="edit" />編集</label> 
+							<label><input type="radio" name="mode" value="remove" />削除</label>
+						</div>
+						<div style="margin:2px 0;">掲示番号[<span title="$op_help" style="color:blue;">?</span>]:<input type="text" name="prevno" value="$prev_no" style="width:15%;" /> パスワード:<input type="password" name="pass" style="width:20%" /> <input type="submit" value="実行" /> <input type="reset" value="取消" /></div>
+					</form>
+				</div>
+			</div>
+		</div>
+<!-- OpForm -->
+
+<!-- EditForm -->
+		<div id="Edit_Page">
+			<div class="Case_Box">
+				<div class="Item_Box">
+					<form enctype="multipart/form-data" method="post" action="$php" style="line-height:20px;">
+						<div style="text-align:center;">$form_entry</div>
+						<div style="padding:5px;">$rule</div>
+						<div>名前 $h_mark[name]</div>
+						<div><input type="text" name="name" style="width:80%;" value="$name" /></div>
+						<!-- SiteUrlArea --> 
+							<div>サイトURL $h_mark[hp_url]</div>
+							<div><input type="text" name="hp_url" style="width:80%;" value="$hp_url" /></div>
+						<!-- SiteUrlArea -->
+						
+						<!-- MailArea --> 
+							<div>メールアドレス $h_mark[mail]</div>
+							<div><input type="text" name="mail" style="width:80%;" value="$mail" /></div>
+							<!-- NewsArea -->
+							<div>レス通知</div>
+							<div><input type="radio" name="news" value="0" checked/>不要 <input type="radio" name="news" value="1" />必要</div>
+							<!-- NewsArea -->
+						<!-- MailArea -->
+						
+						<!-- TitleArea -->
+							<div>題名 $h_mark[title]</div>
+							<div><input type="text" name="entry" style="width:80%;" value="$entry" /></div>
+						<!-- TitleArea -->
+						
+						<div>コメント $h_mark[msg]</div>
+						<div><textarea style="width:90%; height:100px;" name="msg" id="comment-text">$msg</textarea></div>
+						
+						<!-- TagArea -->
+							<div>Tagキーワード</div>
+							<div><input type="text" name="tag" style="width:80%;" value="$tag" /></div>
+						<!-- TagArea -->
+			
+						<!-- FileUpArea -->
+							<input type="hidden" name="MAX_FILE_SIZE" value="$max_file_size" />
+							<div>ファイル($up_size まで) $ftyu </div>
+							<div>
+								<input type="radio" name="utp" id="file" value="file" />
+								<input type="file" name="up_file" id="up_file" style="width:60%;" onchange="valchange('file');get_filesize();" title="jpg、jpeg、gif、pngのファイルが対象" accept=".jpg,.jpeg,.png,.gif" />
+								<span id="UpFile_Size"></span>
+							</div>
+						<!-- FileUpArea -->
+						
+						<!-- MovieUpArea -->
+							<div>動画のURL [<span title="$movie_help" style="color:blue;">?</span>]</div>
+							<div>
+								<input type="radio" name="utp" id="movie" value="movie" />
+								<input type="text" name="up_movie" style="width:80%;" value="$file_url" onchange="valchange('movie');" />
+							</div>
+						<!-- MovieUpArea -->
+					
+						<div>パスワード $h_mark[pass]</div>
+						<div><input type="password" name="pass" style="width:80%;" value="$pass" /></div>
+						
+						<!-- AuthArea -->
+							<div>画像認証 $h_mark[auth]</div>
+							<div>
+								<input type="text" name="auth" style="width:100px; height:25px; float:left;" /> <img src="./img/image_auth.png" id="auth" />
+								<button type="button" onclick="auth_ref();" title="画像認証の更新">更新</button>
+							</div>
+							$ia_tyu
+						<!-- AuthArea -->
+						
+						<div>文字色</div>
+						<select name="color" style="width:80%;">
+							<!-- ColorList:<option style="background:$color;" value="$color">$color</option> -->
+						</select>
+						<div style="text-align:center;"><input type="submit" value="掲載" />　/　<input type="reset" value="取消" /></div>
+						
+						<input type="hidden" name="mode" value="$type" />
+						<input type="hidden" name="prevno" value="$prevno" />
+						
+					</form>
+				</div>
+			</div>
+		</div>
+<!-- EditForm -->
+</div>
+</html>

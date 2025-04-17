@@ -1,0 +1,15 @@
+<!-- ImageList -->
+	<!-- ListBox -->
+		<!-- ItemBox -->
+			<!-- Item -->
+				<div style="display:inline-block; margin-top:8px; border:2px dotted gray;">
+					<div>$img_no $log_flag</div>
+					<a href="$img_url">
+						<img src="$img_file" style="$img_center $img_size" />
+					</a>
+					<div>$log_user[$res_num]<!-- SiteURL:[<a href="$hp_url">URL</a>]--></div>
+				</div>
+			<!-- Item -->
+		<!-- ItemBox -->
+	<!-- ListBox -->
+<!-- ImageList -->
