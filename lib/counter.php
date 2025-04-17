@@ -1,22 +1,28 @@
 <?php
-/* 
- GalleryBoard - Counter
-  v1.2 18/10/05 最初のPVカウントやGoodカウント時のWarningエラーを修正。
+$lib[] = "Gallery Board - Counter Ver:1.3";
+/*
+- 更新ログ -
+ v1.3 22/02/03 php8に対応。
+ v1.2 18/10/05 最初のPVカウントやGoodカウント時のWarningエラーを修正。
+  
 - カウンタ -
  PV_Counter
   + PV_Up - PVカウント用
+  
  Good_Counter
   + Good_Up - Goodカウント用
+
  Counter
-  +- Count_Up - カウント処理
+  -+ Count_Up - カウント処理
+
  Counter_Files
-  +- Load_Count - カウントデータ読み込み
-  +- Save_Count - カウントデータ保存
+  -+ Load_Count - カウントデータ読み込み
+  -+ Save_Count - カウントデータ保存
 */
 $include_list = get_included_files();
 $include_flag =  False;
 
-if($php['set'] and is_array($include_list)){$include_flag = preg_grep("/".$php['set']."$/",$include_list);}
+if(isset($php['set']) and is_array($include_list)){$include_flag = preg_grep("/".$php['set']."$/",$include_list);}
 if($include_flag === False){print "<html><head><title>500 Error</title></head><div>500 PV Counter Control Script Error!</div></html>";exit;}
 
 class PV_Counter extends Counter{
@@ -31,35 +37,35 @@ class PV_Counter extends Counter{
 		$counter_set['data_file'] = $pvc_file['path'];
 		//Count
 		$cnt_data = Counter::Count_Up("pv",$counter_set,$Now_Count);
-		if($cnt_data === -1){Html::Error("エラー","ページビュー カウント用のデータファイルが作成できません。");}
-		return $cnt_data['sum'];
+		if($cnt_data === -1){Error_Page::Main("エラー","ページビュー カウント用のデータファイルが作成できません。");}
+		return $cnt_data['info']['sum'];
 	}
 }
 
 class Good_Counter extends Counter{
 //Good Count
 	public static function Good_Up($Item,$No){
-		global $F,$lock,$good_set,$post_set,$data_file;
+		global $F,$lock,$good_set,$post_set,$count_set,$data_file;
 		
 		list($parent_no,$child_no) = explode("-",$No);
-		if(!$good_set['sw']){Html::Error("エラー","Good機能は有効ではありません。");}
-		elseif($good_set['sw'] == 1 and $child_no !== "0"){Html::Error("エラー","レスにGoodする機能は有効ではありません。");}
-		elseif(!$Item[0]['img']['file']){Html::Error("エラー","この記事にはGood出来ません。");}
-		elseif(!is_numeric($F['prevno']) or !preg_match("/^[0-9]+-[0-9]+$/",$No)){Html::Error("エラー","Goodリクエストが不正です。");}
-		elseif(count($Item) == 0 or count($Item) > 1){Html::Error("エラー","Goodする記事が特定できません。");}
-		elseif($F['prevno'] != $parent_no or $F['prevno'] != $Item[0]['ent_no'] or $Item[0]['ent_no'] != $parent_no){Html::Error("エラー","Goodする記事が一致していません。");}
+		if(!$good_set['sw']){Error_Page::Main("エラー","Good機能は有効ではありません。");}
+		elseif($good_set['sw'] == 1 and $child_no !== "0"){Error_Page::Main("エラー","レスにGoodする機能は有効ではありません。");}
+		elseif(!$Item['img']['file']){Error_Page::Main("エラー","この記事にはGood出来ません。");}
+		elseif(!is_numeric($F['prevno']) or !preg_match("/^[0-9]+-[0-9]+$/",$No)){Error_Page::Main("エラー","Goodリクエストが不正です。");}
+		elseif(!$Item){Error_Page::Main("エラー","Goodする記事が特定できません。");}
+		elseif($F['prevno'] != $parent_no or $F['prevno'] != $Item['ent_no'] or $Item['ent_no'] != $parent_no){Error_Page::Main("エラー","Goodする記事が一致していません。");}
 		else{
 			if($child_no !== "0"){
 				$child_flag = false;
-				foreach($Item[0]['res'] as $res_item){
+				foreach($Item['res'] as $res_item){
 					if($res_item['ent_no'] === $child_no){
-						if($good_set['sw'] == 2 and !$res_item['img']['file']){Html::Error("エラー","このレスにはGood出来ません。");}
+						if($good_set['sw'] == 2 and !$res_item['img']['file']){Error_Page::Main("エラー","このレスにはGood出来ません。");}
 						else{
 							$child_flag = true; break;
 						}
 					}
 				}
-				if(!$child_flag){Html::Error("エラー","Goodするレスが見つかりません。");}
+				if(!$child_flag){Error_Page::Main("エラー","Goodするレスが見つかりません。");}
 			}
 
 			//Count Data File
@@ -67,11 +73,13 @@ class Good_Counter extends Counter{
 			$good_file['path'] = $good_file['dir']."/".$child_no.$data_file['good'];
 			//Counter Setting
 			$counter_set = $good_set;
+			$counter_set['robot'] = "";
+			$counter_set['robot_sw'] = 0;
 			$counter_set['data_file'] = $good_file['path'];
 			//Count
 			$cnt_data = Counter::Count_Up("good",$counter_set);
-			if($cnt_data === -1){Html::Error("エラー","Goodカウント用のデータファイルが作成できません。");}
-			return $cnt_data['sum'];
+			if($cnt_data === -1){Error_Page::Main("エラー","Goodカウント用のデータファイルが作成できません。");}
+			return $cnt_data['info']['sum'];
 		}
 		return 0;
 	}
@@ -94,13 +102,13 @@ class Counter{
 		$robot_flag = False;
 		if($Counter_Set['robot']){
 			$robot_pm = join("|",$Counter_Set['robot']);
-			if(preg_match("/(".$robot_pm.")/",$host) or preg_match("/(".$robot_pm.")/",$ip['addr'])){$robot_flag = True;};
+			if(preg_match("/(".$robot_pm.")/",$ip['host']) or preg_match("/(".$robot_pm.")/",$ip['addr'])){$robot_flag = True;};
 		}
 		//Not Count IP 
 		$no_count_flag = False;
 		if($Counter_Set['not_count']){
 			$not_pm = join("|",$Counter_Set['not_count']);
-			if(preg_match("/(".$not_pm.")/",$host) or preg_match("/(".$not_pm.")/",$ip['addr'])){$no_count_flag = True;};
+			if(preg_match("/(".$not_pm.")/",$ip['host']) or preg_match("/(".$not_pm.")/",$ip['addr'])){$no_count_flag = True;};
 		}
 
 		if(!file_exists(dirname($Counter_Set['data_file']))){return -1;}//Not Directory
@@ -113,7 +121,10 @@ class Counter{
 		}
 
 		//Load
-		if($Counter_Set['lock']){$lock_flag = Files::Lock(dirname($Counter_Set['data_file'])."/".$Counter_Set['lock_file'],$lock_flag,"EX");}
+		if($Counter_Set['lock']){
+			$lock_flag = False;
+			$lock_flag = Files::Lock(dirname($Counter_Set['data_file'])."/".$Counter_Set['lock_file'],$lock_flag,"EX");
+		}
 		list($cnt_data,$ip_list) = Files::Load($Counter_Set['data_file'],$Type);
 
 		if(!isset($cnt_data['info']['to']) or !is_numeric($cnt_data['info']['to'])){$cnt_data['info']['to'] = 0;}
@@ -145,6 +156,7 @@ class Counter{
 
 		$count_flag = 0;
 		//データ書き換え
+		$Counter_Set['count'] = 1;
 		if($ip_flag === False){
 			if(! ($Counter_Set['count'] && ($ip['addr'] == $cnt_data['info']['ip']) )){
 				$t_y_flag = 0;//日付が変わった? Yesterday Image Refresh Flag
@@ -174,16 +186,20 @@ class Counter{
 class Counter_Files extends Files{
 //読込
 	protected static function Load_Count ($Data){
+		$ip_list = array();
 		if(is_array($Data)){
 			$user_list = array();
+		
 			$cnt_data = array_shift($Data);
+			if(!$cnt_data){$cnt_data = "0,0,0,0.0.0.0,0000000000";}
 			$cnt_data = preg_replace("/[\r\n]/","",$cnt_data);
-			$count['info'] = array();
+			$count = array('info'=>array(),'user'=>array());
 			list($count['info']['sum'],$count['info']['to'],$count['info']['yes'],$count['info']['ip'],$count['info']['stamp']) = explode(",",$cnt_data);
 			if(is_array($Data)){
 				foreach($Data as $key=>$line){
 					$line = preg_replace("/[\r\n]/","",$line);
 					if($line){
+						$user = array();
 						list($user['ip'],$user['cnt'],$user['date'],$user['robot']) = explode("<>",$line);
 						$count['user'][$key] = $user; 
 						$ip_list[$key] = $user['ip'];
@@ -191,7 +207,6 @@ class Counter_Files extends Files{
 				}
 			}
 		}
-		if(!is_array($ip_list)){$ip_list = array();}
 		return array($count,$ip_list);
 	}
  

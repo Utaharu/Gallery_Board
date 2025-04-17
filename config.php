@@ -1,15 +1,14 @@
 <?php
-
 $code_set['system'] = "UTF-8";//文字コード
 $code_set['list'] = array("UTF-8","EUC-JP","JIS","Shift_JIS");
-setlocale(LC_ALL, 'ja_JP');
+setlocale(LC_ALL, 'ja_JP');//Locale
 mb_internal_encoding($code_set['system']);
 mb_http_output($code_set['system']);
 ob_start('mb_output_handler');
 mb_regex_encoding($code_set['system']);
-date_default_timezone_set("Asia/Tokyo");
+date_default_timezone_set("Asia/Tokyo");//Timezone
 ////////////////////////////////////////////
-//  PHP名：Gallery Board Ver：9.1         //
+//  PHP名：Gallery Board Ver：9.7         //
 $sys_info = 1;
 error_reporting(E_ALL & ~E_NOTICE);
 ini_set('display_errors',1);
@@ -19,10 +18,21 @@ ini_set('display_errors',1);
 //  作成日:09/04/13                        //
 //  URL:https://www.tenskystar.net/         //
 /////////////////////////////////////////////
-$title['main'] = "Gallery Board";//タイトル
 
-//各種ヘッダー中の<title>タグに出力する値
-//""ではなく、''で囲ってください
+//-- Script Base URLの設定。(index.phpを含まない。(http://~/~/)) --//
+/*
+　　*1.RSSやPickUpを使う場合
+ 　*2.上手く動かない場合は手動設定してください。
+*/
+$php['base_url'] = (empty($_SERVER["HTTPS"])?"http://":"https://").$_SERVER['SERVER_NAME'].dirname($_SERVER['SCRIPT_NAME'])."/";
+
+//-- 掲示板タイトル --//
+$title['main'] = "Gallery Board";//メインタイトル
+
+/* 
+ 各種ヘッダー中の<title>タグに出力する値
+  * ""ではなく、''で囲ってください
+*/
 $title['op'] = '$title - 操作';//操作ページ
 $title['new'] = '$title - 新規貼り付け';//新規投稿
 $title['edit'] = '$title - 編集';//編集
@@ -31,53 +41,65 @@ $title['page'] = '$title P $page';//2ページ目～
 
 //-- スクリプトの場所 --//
 $php['main'] = "index.php";//Main
-$php['set'] = "config.php";//Config
-$php['html'] = "lib/html.php";//HTML
-$php['thumb'] = "lib/thumbnail.php";//Thunbnail
-$php['embed'] = "lib/embed.php";//Embed
-$php['entry'] = "lib/entry.php";//Entry
-$php['count'] = "lib/count.php";//PageView Counter
-$php['auth'] = "lib/ima.php";//ImageAuth
-$php['files'] = "lib/files.php";//File Control
-$php['ctrl'] = "lib/ctrl.php";//Control
 $php['rss'] = "rss.php";//RSS
 $php['pickup'] = "pickup.php";//PickUP
 
-$php['css'] = "lib/style.css";//スタイルシート
-$php['javascript'] = "lib/script.js";//Javascript
+// * Config * //
+$php['set'] = "config.php";
 
-//Script Base URL(index.phpを含まない、最終フォルダまでのURL。(http://~/~/)) *RSSやPickUpを使う場合
-// * 自動取得しますが、上手く動かない場合は手動設定してください。
-$php['base_url'] = (empty($_SERVER["HTTPS"])?"http://":"https://").$_SERVER['SERVER_NAME'].dirname($_SERVER['SCRIPT_NAME'])."/";
+// * lib php * //
+$php['lib']['common'] = "lib/common.php";//Common Control
+$php['lib']['maintain'] = "lib/maintain.php";//Maintain
+$php['lib']['access'] = "lib/access.php";//Access
+$php['lib']['html'] = "lib/html.php";//HTML
+$php['lib']['thumb'] = "lib/thumbnail.php";//Thunbnail
+$php['lib']['embed'] = "lib/embed.php";//Embed
+$php['lib']['entry'] = "lib/entry.php";//Entry
+$php['lib']['counter'] = "lib/counter.php";//PageView Counter
+$php['lib']['auth'] = "lib/ima.php";//ImageAuth
+$php['lib']['files'] = "lib/files.php";//File Control
+$php['lib']['rss'] = "lib/rss_ctrl.php";//RSS Control
+$php['lib']['pickup'] = "lib/pickup_ctrl.php";//Pickup Control
+
+// * lib その他 * //
+$php['lib']['css'] = "lib/style.css";//スタイルシート
+$php['lib']['javascript'] = "lib/script.js";//Javascript
+
 
 $home['pc'] = "http://www.com/";//ホーム
 $home['mb'] ="";//モバイルのホーム。　無い場合は、""にする。（ある場合に限り、キャリア判別が行われます。)
 
 $admin['pass'] = "12345";//管理パスワード
 
-$admin['yt_api_key'] = "";//YoutubeAPI v3を利用してサムネイルを取得する場合のAPI Key
-
 //-- データファイルの場所 --//
 $data_file['template'] = "dat/tmp.dat";//PC用　テンプレートファイル
 $data_file['mb_template'] = "dat/mb_tmp.dat";//モバイル用 テンプレートファイル
 $data_file['data'] = "dat/dat.dat";//書き込みデータファイル
 $data_file['no'] = "dat/no.dat";//掲示番号データ
+$data_file['post_limit'] = "dat/post_limit.dat";//
 
 //---- メインデータ ファイルロック ----//
 $lock['sw'] = 1;//ON=1 , OFF=0
 $lock['file'] = "lock.lock";//ファイルロック用のファイル名
 
 //--- 投稿 設定 ---//
-$post_set['parent']['new'] = 0;//新規投稿制限 0=誰でも 1=管理者のみ
-$post_set['parent']['msg'] = 1;//親記事のコメント必須 0=OFF 1=ON
+$post_set['parent']['new'] = 0;//新規投稿制限 0 = 誰でも 1 = 管理者のみ
+$post_set['parent']['msg'] = 1;//親記事のコメント必須 0 = OFF 1 = ON
+
 $post_set['parent']['max_num'] = 0;//親記事の最大-投稿数 (0 = OFF 1以上 = ON) 指定した投稿数を超えると、最終更新が古い記事から削除します
 
 $post_set['upload']['dir'] = "/img";//アップロードの保存先　フォルダ名　相対パスで指定
-$post_set['upload']['thumbnail']['sw'] = 1;//詳細・一覧 表示にサムネイルを使う(ON = 1,OFF=0) * createimageなどGDを使います。GDが利用できないサーバではご利用できません。
-$post_set['upload']['mode'] = 2;//貼り付け可能 (0=画像のみ,1=動画URLのみ,2=画像と動画URL)
-$post_set['upload']['size'] = 150000;//ファイルサイズ制限 （単位:バイト)1KB=1000 Bytes
+
+//詳細・一覧 表示にサムネイルを使う(ON = 1,OFF=0)
+//-　*createimageなどGDを使います。GDが利用できないサーバではご利用できません。
+//- *アニメーションなgif・pngは、サーバでimagickが利用できる場合のみ、アニメーションなサムネイルが生成されます。
+$post_set['upload']['thumbnail']['sw'] = 1;
+
+$post_set['upload']['mode'] = 2;//貼り付け可能な種類 (0 = 画像のみ,1 = 動画URLのみ,2 = 画像と動画URL)
+$post_set['upload']['size'] = 600000;//ファイルサイズ制限 （単位:バイト)1KB=1000 Bytes
 $post_set['upload']['movie_img'] = 1;//動画イメージ (1 = DL $upload['dir']に保存, 0 = Preview 動画サイトから参照 して表示する)
 
+//Tagキーワード
 $post_set['parent']['tag'] = 0;//親記事のTagキーワードの登録可能な数 0 = OFF 1以上 = 登録可能な個数。
 $post_set['res']['tag'] = 0;//レスのTagキーワードの登録可能な数 0 = OFF 1以上 = 登録可能な個数。
 
@@ -87,7 +109,11 @@ $post_set['res']['tag'] = 0;//レスのTagキーワードの登録可能な数 0
 //-- *サムネイルを利用する場合、サムネイル画像分もカウントされます。
 $post_set['upload']['capacity'] = 0;
 
-//投稿可能な動画サイト(0=不可 1許可)
+
+//---- 動画投稿 設定 ----//
+$admin['yt_api_key'] = "";//YoutubeAPI v3を利用してサムネイルを取得する場合のAPI Key
+
+//動画投稿が可能な設定の場合に、投稿可能な動画サイト(0 = 不可 1 = 許可)
 //Youtube、ニコニコ動画は不可にできません。
 $post_set['upload']['himado'] = 1;//ひまわり動画
 $post_set['upload']['daily'] = 1;//Dailymotion
@@ -104,14 +130,17 @@ $post_set['backimg']['viemo'] = "./img/viemo.png";
 //投稿フォームで名前が未入力でも投稿出来るようにする場合は、代わりに入力する名前を設定してください。
 // *名前を必須入力にするには、空欄にしてください。
 $post_set['no_name'] = "";
-$post_set['trip_sw'] = 1;//トリップ機能 (ON=1 , OFF=0) 名前の入力欄に 「名前#トリップ用英数字」
+
+$post_set['trip']['sw'] = 1;//トリップ機能 (ON=1 , OFF=0) 名前の入力欄に 「名前#トリップ用文字」
+$post_set['trip']['algo'] = "sha256";
+
 $post_set['msg']['no_jp'] = 1;//日本語を含まないコメントの投稿を禁止 (0=OFF,1=ON)
 $post_set['msg']['min_length'] = 0;//コメントの最低文字数制限(0=OFF,1以上=ON)
 
 //HPのURL入力欄の利用と入力必須設定(0=OFF, 1=ON(必須指定なし) , 2= 親のみ必須 , 3= 親および子が必須 , 4= 子(レス)のみ必須)
 $post_set['hp_url'] = 1;
 
-$post_set['continue']  = 10; //連続投稿制限(cookie使用) 0=OFF 1以上= 添付後の次の投稿は指定秒数 禁止
+$post_set['continue']  = 0; //連続投稿制限(秒） 0=OFF 1以上= 添付後の次の投稿は指定秒数 禁止
 
 //編集モードの権限
 $post_set['parent']['del_mode'] = 0;//親記事の編集制限 (1=管理者のみ 0=記事投稿者と管理者)
@@ -171,7 +200,7 @@ $print_set['res']['sort'] = 0;//レスの投稿位置 (最新の投稿が先頭 
 $print_set['res']['q_navi'] = 1;//レス引用-ナビゲート機能(ON = 1, OFF = 0) レスのメッセージに「>>レス番号」がある場合に、リンクを張ります。
 
 //-- 動画関連
-$print_set['preview']['movie'] = 0;//再生方法 (0 = 新規タブ or 新規ウィンドウ　,　 1=ページ内埋め込み(*ただし、対応サイトのみ)) 
+$print_set['preview']['movie'] = 1;//再生方法 (0 = 新規タブ or 新規ウィンドウ　,　 1=ページ内埋め込み(*ただし、対応サイトのみ)) 
 
 //-- ページナビゲート
 //現在のページ数から、指定した範囲前後のページナビゲートを表示します。(ページが存在する番号のみ出力)
@@ -207,7 +236,7 @@ $count_set['robot'] = array(
 
 //ビュー カウントしない IP or Host 正規表現
 $count_set['not_count'] = array(
-	"182\.1(1[2-9]|2[0-7])\.[0-9]*\.[0-9]*",
+	"192\.1(1[2-9]|2[0-7])\.[0-9]*\.[0-9]*",
 	"101\.2(2[4-9]|3[0-1])\.[0-9]*\.[0-9]*"
 );
 
@@ -260,7 +289,7 @@ $rss_set['item'] = <<< 'EOM'
 <item>
 	<title>$log_entry</title>
 	<link>$img_url</link>
-	<description>$log_msg</description>
+	<description><![CDATA[$log_msg]]></description>
 	<content:encoded>
 		<![CDATA[
 			<p><a href="$img_url"><img src="$img_file" alt="$log_entry" title="$log_entry" /></a></p>
@@ -320,64 +349,133 @@ $access_set['proxy']['skip'] = array(
 
 //- Tor 規制
 //Torをチェックする(0=OFF , 1=ON);
-$access_set['tor']['sw'] = 0;
+$access_set['tor']['sw'] = 1;
 
 //Tor IP List
-$access_set['tor']['ip_list'][0] = "http://torstatus.blutmagie.de/ip_list_all.php/Tor_ip_list_ALL.csv";//取得先
+$access_set['tor']['ip_list'][0] = "https://check.torproject.org/exit-addresses";//取得先
 $access_set['tor']['data'][0] = "./dat/tor_data.dat";//保存場所
 
 $access_set['tor']['up_time'] = 360;//Tor IP List  再取得-時間 (分) 60 => 1時間毎
 
+//- アクセス国 規制
+$access_set['cc']['sw'] = 0;//日本以外からのアクセスを拒否(0 = OFF, 1=ON)
 
+//IP割り当てリストのファイルの取得方法 (1 = curl, 0 = file_get_contents)
+$access_set['cc']['curl_sw'] = 1;
+
+//IP割り当てリスト(Cider表記) ファイルのダウンロード場所
+//空欄にすると、そのipバージョンの取得は行わない。
+$ip_fil['range_file']['ipv4'] = "";//IPv4
+$ip_fil['range_file']['ipv6'] = "";//IPv6
+
+//規制用データファイルの保存先
+$access_set['cc']['data']['ipv4'] = "./dat/ipv4_list.dat";//IPv4
+$access_set['cc']['data']['ipv6'] = "./dat/ipv6_list.dat";//IPv6
+
+$access_set['cc']['up_day'] = 1;//何日毎にデータを更新するか
+//更新 時間 この時間以降に更新を実行する 
+// * 24時間表記。 ""で囲んで　,区切り。 複数設定可能。
+// * 自己サーバ以外へ問い合わせしに行くならば、増やさないことを推奨。
+$access_set['cc']['up_time'] = array("5:00:00","13:00:00");
+
+//その他アクセス禁止 手動設定 || 正規表現で記述
+$access_set['cc']['limit'] = array("");
+//アクセス許可　手動設定　 正規表現で記述 ""で囲って,で区切ることで複数設定 可
+$access_set['cc']['skip'] = array();
+
+//- モバイル判別用-正規表現
+//ホスト名
+$access_set['caria']['host'] = array(
+	'docomo.\ne\.jp:Docomo',
+	'ezweb\.ne\.jp:Au',
+	'jp-d\.ne\.jp:SoftBank',
+	'jp-h\.ne\.jp:SoftBank',
+	'jp-t\.ne\.jp:SoftBank',
+	'jp-c\.ne\.jp:SoftBank',
+	'jp-k\.ne\.jp:SoftBank',
+	'jp-r\.ne\.jp:SoftBank',
+	'jp-n\.ne\.jp:SoftBank',
+	'jp-s\.ne\.jp:SoftBank',
+	'jp-q\.ne\.jp:SoftBank',
+);
+
+//User Agent
+$access_set['caria']['agent'] = array(
+	'Googlebot-Mobile:GMobile',
+	'iPhone:iPhone',
+	'iPod:iPod',
+	'(?!(Android.*SC-01C))(Android.*Mobile):Android',
+	'IEMobile:IEMobile',
+	'BlackBerry:BlackBerry',
+	'Y!J-SRD\/1\.0:Ymobile',
+	'Y!J-MBS\/1\.0:Ymobile'
+);
+		
 //---- 以下 PHP知る者以外は触るべからず ----//
+
+// -- Movie Set
 /*
- Movie Set
  regexp = Movie Url Pattern
  embed = Movie Enbed Tag ($movie_id = Movie Id)
+ thumb_url = Get Movie Thumbnail - Request URL ($movie_id = Movie Id)
 */
+//- Youtube
 $movie_set['youtube']['regexp'] = "(?:^https?:\/\/(?:[\w\+\-]*\.)?youtube\.com\/watch.*v=|^https?:\/\/(?:[\w\+\-@]*\.)?youtu\.be\/)([\w&\+\-]+)";
 $movie_set['youtube']['embed'] = '<iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/$movie_id?autoplay=1" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe><div><a href="https://www.youtube.com/watch?v=$movie_id" target="_blank">https://www.youtube.com/watch?v=$movie_id</a></div>';
+$movie_set['youtube']['thumb_url']['default'] = 'https://i.ytimg.com/vi/$movie_id/hqdefault.jpg';
+$movie_set['youtube']['thumb_url']['v3'] = 'https://www.googleapis.com/youtube/v3/videos?id=$movie_id' . "&key=" . $admin['yt_api_key'] . "&part=snippet&fields=items(snippet/thumbnails";
 
+
+//- Noconico
 $movie_set['nico']['regexp'] = "^https?:\/\/(?:[\w\+\-]*\.)?nicovideo\.jp\/watch\/(.+)";
 $movie_set['nico']['embed'] = '<iframe width="560" height="315" src="http://embed.nicovideo.jp/watch/$movie_id?jsapi=1&playerId=1" id="nicovideoPlayer-1" frameborder="0" allowfullscreen></iframe><div><a href="http://nicovideo.jp/watch/$movie_id" target="_blank">http://nicovideo.jp/watch/$movie_id</a></div>';
+$movie_set['nico']['thumb_url'] = 'http://www.nicovideo.jp/api/getthumbinfo/$movie_id';
 
+//- Himawari Douga
 $movie_set['himado']['regexp'] = "^https?:\/\/(?:[\w\+\-]*\.)?himado\.in\/([0-9]+)";
 $movie_set['himado']['embed'] = '';
+$movie_set['himado']['thumb_url'] = 'http://himado.in/?mode=movie&id=$movie_id';
 
+//- Dailymotion
 $movie_set['daily']['regexp'] = "(?:^https?:\/\/(?:[\w\+\-]*\.)?dailymotion\.com\/video\/|https?\:\/\/(?:[\w\+\-]*\.)?dai\.ly\/)([\w\+\-]+)";
 $movie_set['daily']['embed'] = '<iframe width="560" height="315" frameborder="0" src="https://www.dailymotion.com/embed/video/$movie_id?autoPlay=1" allowfullscreen allow="autoplay"></iframe><div><a href="https://www.dailymotion.com/video/$movie_id" target="_blank">https://www.dailymotion.com/video/$movie_id</a></div>';
+$movie_set['daily']['thumb_url'] = 'https://api.dailymotion.com/video/$movie_id?fields=thumbnail_url';
 
+//- Viemo
 $movie_set['viemo']['regexp'] = "^https?:\/\/(?:[\w\+\-]*\.)?vimeo\.com\/([0-9]+)";
 $movie_set['viemo']['embed'] = '<iframe width="560" height="315" src="https://player.vimeo.com/video/$movie_id?autoplay=1" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe><div><a href="https://vimeo.com/$movie_id" target="_blank">https://vimeo.com/$movie_id</a></div>';
+$movie_set['viemo']['thumb_url'] = 'https://vimeo.com/api/oembed.json?url=https://vimeo.com/$movie_id';
 
-//Movie Url Help
+// - Movie Url Help Description
+// Youtube
 $help['movie'] = "- Youtube -\n
  http://www.youtube.com/watch?v=********\n
  http://youtu.be/********\n
 - ニコニコ動画 -\n
  http://***.nicovideo.jp/watch/********\n";
- 
+
+// Dailymotion
 if($post_set['upload']['daily']){
 $help['movie'] .= "
 - Dailymotion -\n
  http://www.dailymotion.com/video/******\n
  http://dai.ly/******\n";
 }
-
+// Himado
 if($post_set['upload']['himado']){
 $help['movie'] .= "
 - ひまわり動画 -\n
  http://himado.in/******\n";
 }
 
+// Viemo
 if($post_set['upload']['viemo']){
 $help['movie'] .= "
 - Viemo -\n
  https://vimeo.com/******";
 }
 
-
-//Operation Help
+// -- Operation Help Description
 $help['op']="
 親記事を削除したい場合は\r\n
 親番号のみで\r\n
@@ -385,16 +483,39 @@ $help['op']="
 親番号-レス番号
 ";
 
-//HomePage Url Input Pattern
+// -- HomePage Url Input Pattern
 //URL入力欄($hp_url_sw)におけるチェック用正規表現(「&」などのエスケープが必要な文字は、エスケープ後の文字で記述）
 $hp_url_type='/^(https?|ftp|news)(:\/\/[[:alnum:]\+\$\;\?\.%,!#~*\/:@&=_-]+)/i';
 
-//未実装
-/*
-$post_set['parent']['category'] = array(
+//実装調整中 - カテゴリ
+$post_set['category']['sw'] = 0;//On = 1, Off = 0
+//カテゴリのリスト
+$post_set['category']['name'] = array(
 "アニメ","オリジナル",
 );
-*/
+//カテゴリへのリンク一覧を自動出力する場合
+//全体とするカテゴリ名
+$print_set['category']['all'] = "全て";
+
+
+// -- IPv Info Set
+$ip_filter['ipinfo']['v4'] = array(
+'digit_pm'=>"0-9",
+'bit'=>32,//Sum Bit Num
+'unit'=>4,//IP Unit Num
+'split'=>".",//separator
+'base_file'=>$ip_fil['range_file']['ipv4'],
+'save_file'=>$access_set['cc']['data']['ipv4']
+);
+
+$ip_filter['ipinfo']['v6'] = array(
+'digit_pm'=>"0-9a-f",
+'bit'=>128,//Sum Bit Num
+'unit'=>8,//IP Unit Num
+'split'=>":",//separator
+'base_file'=>$ip_fil['range_file']['ipv6'],
+'save_file'=>$access_set['cc']['data']['ipv6']
+);
 
 //check
 $include_list = get_included_files();
@@ -405,6 +526,8 @@ if($include_flag === False){print "<html><head><title>500 Error</title></head><d
 
 // -- Decode Start
 $no_getpost = 1;//Get Method Error
+	$queries = "";
+	$F = array();
 	if($_GET){$queries=$_GET;}
 	if($_POST){
 		if(!is_array($queries)){$queries=$_POST;}
@@ -427,6 +550,11 @@ $no_getpost = 1;//Get Method Error
     	}
 		
 		return $return;
+	}
+	
+	$form_keys = array('mode','page','prevno','name','pass','entry','msg','color','hp_url','url','kword','search','good','news','mail','tag','utp','admin','up_file','res_flag','category','auth');
+	foreach($form_keys as $line){
+		if(array_key_exists($line,$F) === False){$F[$line] = "";}
 	}
 // -- Decode End
 

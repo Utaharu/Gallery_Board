@@ -1,23 +1,28 @@
 <?php
-/* GalleryBoard - Image Auth
- v1.0 16/12/26
+$lib[] = "Gallery Board - Image Auth Control Ver:1.1";
+/* 
+- 更新ログ -
+ v1.1 22/02/17 php8対応
+
 - 画像認証 -
  Auth
   + Get_Image - 認証画像の出力
 */
+
 $include_list = get_included_files();
 $include_flag =  False;
 
-if($php['set'] and is_array($include_list)){$include_flag = preg_grep("/".$php['set']."$/",$include_list);}
+if(isset($php['set']) and is_array($include_list)){$include_flag = preg_grep("/".$php['set']."$/",$include_list);}
 if($include_flag === False){print "<html><head><title>500 Error</title></head><div>500 Image Auth Script Error!</div></html>";exit;}
 
 class Auth{
 //Image Auth
 	public static function Get_Image(){
 		global $post_set;
-		if($post_set['auth']['type'] and !function_exists("imagecreate")){Html::Error("設定エラー","GDのimagecreateが利用できないため、画像認証は使えません。");}
+		if($post_set['auth']['type'] and !function_exists("imagecreate")){Error_Page::Main("設定エラー","GDのimagecreateが利用できないため、画像認証は使えません。");}
 		
 		$rand_img = "";
+		$rand_num = 0;
 		switch($post_set['auth']['type']){
 			case "rand1":
 				for($cnt = 1; $cnt <= $post_set['auth']['num']; $cnt++){
@@ -42,7 +47,7 @@ class Auth{
 			$one = substr($rand_img,$cnt,1);
 			imagestring($im, rand(1,5), (5 + 20 * $cnt), 13-rand(0,5)*rand(1,2), $one, $black);
 		}
-	
+
 		setcookie("auth",crypt($rand_img,"auth"));
 		header('Expires: Sat, 26 Jul 1997 05:00:00 GMT');
 		header('Last-Modified: ' . gmdate( 'D, d M Y H:i:s' ) . ' GMT');

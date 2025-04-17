@@ -1,6 +1,10 @@
 <?php
-/* GalleryBoard - Data File Control
+$lib[] = "Gallery Board - Data File Control Ver:1.4";
+/* 
+- 更新ログ -
+　v1.4 22/02/03 php8対応。
  v1.3 19/06/12 Tag用の調整。
+
 - データファイル 操作 -
  Files
   + Load - 読み込み
@@ -12,7 +16,7 @@
 $include_list = get_included_files();
 $include_flag =  False;
 
-if($php['set'] and is_array($include_list)){$include_flag = preg_grep("/".$php['set']."$/",$include_list);}
+if(isset($php['set']) and is_array($include_list)){$include_flag = preg_grep("/".$php['set']."$/",$include_list);}
 if($include_flag === False){print "<html><head><title>500 Error</title></head><div>500 Files Script Error!</div></html>";exit;}
 
 class Files{
@@ -24,12 +28,12 @@ class Files{
 			return file_get_contents($File);
 		}else{
 			$rdata = file($File);//一行取り込み
-			if($rdata === False){Html::Error("エラー","データの読み込みに失敗しました。");}
+			if($rdata === False){Error_Page::Main("エラー","データの読み込みに失敗しました。");}
 			
 			if($File == $data_file['data']){
 				return  Files::Load_Log($rdata);
 			}elseif((basename($File) == basename($data_file['pvc']) and $Type == "pv") or $Type == "good"){
-				if(!method_exists('Counter_Files','Load_Count')){Html::Error("システム エラー","カウンター用スクリプトが読み込まれていません。");}
+				if(!method_exists('Counter_Files','Load_Count')){Error_Page::Main("システム エラー","カウンター用スクリプトが読み込まれていません。");}
 				return  Counter_Files::Load_Count($rdata);
 			}else{
 				return  $rdata;
@@ -44,7 +48,7 @@ class Files{
 //		$new_line = array(ent_no=>$ent_no,img=>$upname,entry=>$F[entry],msg=>$F['msg'],color=>$F[color],name=>$name,pass=>$F['pass'],res=>"",'date'=>$date,ip=>$host,res_cnt=>0,up_date=>$times);
 
 		$fr = fopen($File,"w");
-		if(!$fr){Html::Error("エラー","ファイルが開けませんでした。");}
+		if(!$fr){Error_Page::Main("エラー","ファイルが開けませんでした。");}
 		else{
 			if($lock['sw']){flock($fr, LOCK_EX);}
 			rewind($fr);
@@ -52,15 +56,15 @@ class Files{
 			if($Type == "log" and $File == $data_file['data']){
 				$Data = Files::Save_Log($Data);
 			}elseif((basename($File) == basename($data_file['pvc']) and $Type == "pv") or $Type == "good"){
-				if(!method_exists('Counter_Files','Save_Count')){Html::Error("システム エラー","カウンター用スクリプトが読み込まれていません。");}
+				if(!method_exists('Counter_Files','Save_Count')){Error_Page::Main("システム エラー","カウンター用スクリプトが読み込まれていません。");}
 				$Data = Counter_Files::Save_Count($Data);
-			}elseif(is_array($Data)){Html::Error("エラー","データ整形に失敗しました。");}
+			}elseif(is_array($Data)){Error_Page::Main("エラー","データ整形に失敗しました。");}
 			
 			$bytes = fwrite($fr,$Data);//書き込み
 			fflush($fr); 
 			if($lock['sw']){flock($fr, LOCK_UN);}
 			fclose($fr);
-			if($Data and $bytes == False){Html::Error("エラー","データの書き込み失敗しました。");}
+			if($Data and $bytes == False){Error_Page::Main("エラー","データの書き込み失敗しました。");}
 		}
 		return;
 	}
@@ -72,7 +76,7 @@ class Files{
     	if($lock['sw']) {
 			if(!$Lock_Fr){
 				$Lock_Fr = fopen($Lock_File,"a");
-				if($Lock_Fr === false){Html::Error("エラー","LockFileが開けません");}
+				if($Lock_Fr === false){Error_Page::Main("エラー","LockFileが開けません");}
 			}
 			
 			if($Type == "SH"){$l_type = 1;}//共有
@@ -80,7 +84,7 @@ class Files{
 			elseif($Type == "UN"){$l_type = 3;}//解除
 			$lock_flag = flock($Lock_Fr,$l_type|LOCK_NB);
 			if($Type == "UN" and $lock_flag){fclose($Lock_Fr);}
-			if($lock_flag === False){Html::Error("エラー","ファイルロックができませんでした。");}
+			if($lock_flag === False){Error_Page::Main("エラー","ファイルロックができませんでした。");}
 			
 			if($Type == "UN"){$Lock_Fr = "";}
 		}
@@ -101,7 +105,7 @@ class Files{
 						$item[1] = explode("@",$item[1]);
 					}
 					//Parent Tag
-					$item[16] = Ctrl::Tag_Adjust($item[16]);
+					$item[16] = Common::Tag_Adjust($item[16]);
 					
 					//Res
 					if($item[7]){
@@ -115,7 +119,7 @@ class Files{
 										$res_data[5] = explode("@",$res_data[5]);
 									}
 									//Res Tag
-									$res_data[9] = Ctrl::Tag_Adjust($res_data[9]);
+									$res_data[9] = Common::Tag_Adjust($res_data[9]);
 									
 									$item[7][$res_key] = array('name'=>$res_data[0],'msg'=>$res_data[1],'color'=>$res_data[2],'date'=>$res_data[3],'ip'=>$res_data[4],'img'=>array('url'=>$res_data[5][0],'file'=>$res_data[5][1]),'ent_no'=>$res_data[6],'pass'=>$res_data[7],'hp_url'=>$res_data[8],'tag'=>$res_data[9]);
 									$res_key++;
@@ -176,6 +180,5 @@ class Files{
 		return $Data;
 	}
 }
-//1.1 書き込み時整形
 //Gallery Board - www.tenskystar.net
 ?>
