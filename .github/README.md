@@ -12,18 +12,19 @@
  
 
 >## 縮小版サムネイルを生成する機能について
->>### アニメーション画像ファイル
- * GIFアニメーション
-  - imagickが利用できる場合
-    サムネイルもアニメーションで生成。
-  - imagickが利用できない場合
-    静止画でサムネイルが生成されます。
 
- * アニメーションPNG(APNG)
-  - imagick + ffmpegが利用できる場合
-    アニメーションPNGとしてサムネイルも生成されます。
-  - imagickやffmpegが利用できない場合
-    1フレーム目な静止画のPNGファイルでサムネイルが生成されます。
+> ### アニメーション画像ファイル
+- GIFアニメーション
+  - imagickが利用できる場合
+    > サムネイルもアニメーションで生成。
+  - imagickが利用できない場合
+    > 静止画でサムネイルが生成されます。
+
+ - アニメーションPNG(APNG)
+   - imagick + ffmpegが利用できる場合
+     > アニメーションPNGとしてサムネイルも生成されます。
+   - imagickやffmpegが利用できない場合
+     > 1フレーム目な静止画のPNGファイルでサムネイルが生成されます。
 
 <br/>
 
@@ -33,7 +34,14 @@
 
 <br/>
 
-> ## [更新履歴](History.md)
-- Ver:9.7 2025/04/17
- apngのサムネイル生成でffmpegが利用できない場合は、imagickのエラーで処理が止まるので、
- ffmpegが使えない場合は、静止画な通常のPNGを出力する様に修正。
+> ## 更新履歴
+ - > ### Ver: 10.~
+ - > ### [Ver: 9.~](History/History_v9.md)
+ - > ### [Ver: 8.~](History/History_v8.md)
+ - > ### [Ver: 7.~](History/History_v7.md)
+ - > ### [Ver: 6.~](History/History_v6.md)
+ - > ### [Ver: 5.~](History/History_v5.md)
+ - > ### [Ver: 4.~](History/History_v4.md)
+ - > ### [Ver: 3.~](History/History_v3.md)
+ - > ### [Ver: 2.~](History/History_v2.md)
+ - > ### [Ver: 1.~](History/History_v1.md)
